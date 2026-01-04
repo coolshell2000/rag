@@ -36,17 +36,21 @@ jobs:
       run: |
         python -c "
 import sys
-sys.path.insert(0, ./app)
+sys.path.insert(0, './app')
 from main import app
-print(Testing Flask app import...)
+print('Testing Flask app import...' )
 assert app is not None
-print(Flask app imported successfully!)
+print('Flask app imported successfully!')
 "
         
     - name: Run Flask app in background and test
       run: |
         # Start the Flask app in the background
-        python app/main.py &
+        cd app && python -c "
+from main import app
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)
+" &
         APP_PID=$!
         
         # Wait a moment for the app to start
@@ -79,3 +83,4 @@ print(Flask app imported successfully!)
         echo "Deploying Flask app to production..."
         echo "In a real scenario, this would deploy to Heroku, AWS, Azure, etc."
         echo "Deployment completed successfully!"
+
