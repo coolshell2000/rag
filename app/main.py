@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return '''
-    <h1>欢迎来到Flask应用!</h1>
+    <h1>欢迎来到TAOTAO应用!</h1>
     <p>这是一个可部署的Flask应用示例。</p>
     <a href="/api/status">查看API状态</a> | 
     <a href="/health">健康检查</a>
