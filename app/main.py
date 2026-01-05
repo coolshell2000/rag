@@ -77,6 +77,35 @@ def get_visitors(limit=100):
         conn.close()
         return visitors
 
+def get_ip_location(ip_address):
+    """Get location information for an IP address."""
+    # For now, we'll use a simple mock implementation
+    # In a production environment, you would use a service like GeoIP2
+    import requests
+    import socket
+
+    try:
+        # Try to get reverse DNS
+        reverse_dns = socket.gethostbyaddr(ip_address)[0]
+    except (socket.herror, socket.gaierror):
+        reverse_dns = "N/A"
+
+    # Try to get location info using a free API (for demo purposes)
+    try:
+        response = requests.get(f"http://ip-api.com/json/{ip_address}", timeout=2)
+        if response.status_code == 200:
+            data = response.json()
+            country = data.get('country', 'N/A')
+            city = data.get('city', 'N/A')
+            region = data.get('regionName', 'N/A')
+            location = f"{city}, {region}, {country}"
+        else:
+            location = "Location unavailable"
+    except:
+        location = "Location unavailable"
+
+    return location, reverse_dns
+
 # Initialize database on startup
 init_db()
 
@@ -444,11 +473,13 @@ def visitor_history():
     # Create HTML response
     html = '''
     <h1>访问者历史</h1>
-    <table border="1" style="border-collapse: collapse; width: 100%;">
+    <table border="1" style="border-collapse: collapse; width: 100%; font-size: 14px;">
         <thead>
             <tr>
                 <th>IP地址</th>
                 <th>用户名</th>
+                <th>位置</th>
+                <th>反向DNS</th>
                 <th>时间戳</th>
                 <th>用户代理</th>
             </tr>
@@ -461,10 +492,15 @@ def visitor_history():
         user_agent_display = user_agent if user_agent else "N/A"
         username_display = username if username else "访客"
 
+        # Get location and reverse DNS info
+        location, reverse_dns = get_ip_location(ip)
+
         html += f'''
             <tr>
                 <td>{ip}</td>
                 <td>{username_display}</td>
+                <td>{location}</td>
+                <td>{reverse_dns}</td>
                 <td>{timestamp}</td>
                 <td>{user_agent_display}</td>
             </tr>
