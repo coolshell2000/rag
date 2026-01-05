@@ -39,13 +39,14 @@ def init_db():
 
 def save_visitor(ip_address, user_agent=None):
     """Save visitor information to the database."""
-    # Check if we're in a Flask request context before accessing current_user
     user_id = None
     try:
-        # Access current_user only when in a request context
-        from flask import g
-        if hasattr(g, '_login_user'):
-            user_id = g._login_user.id if g._login_user and g._login_user.is_authenticated else None
+        # Check if we're in a request context and current_user is available
+        from flask import _request_ctx_stack
+        if _request_ctx_stack.top is not None:
+            from flask_login import current_user
+            if current_user and current_user.is_authenticated:
+                user_id = current_user.id
     except (RuntimeError, AttributeError):
         # Not in a Flask request context or current_user not available, treat as guest
         pass
