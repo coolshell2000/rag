@@ -237,7 +237,7 @@ def home():
     # Check if user is authenticated
     if current_user.is_authenticated:
         return f'''
-        <h1>欢迎来到TAOTAO应用!</h1>
+        <h1>欢迎来到TAOTAO应用库!</h1>
         <p>你好, {current_user.name}!</p>
         <p>当前位置: {location}</p>
         <p>天气信息: {weather_info}</p>
@@ -250,7 +250,7 @@ def home():
         '''
     else:
         return f'''
-        <h1>欢迎来到TAOTAO应用!</h1>
+        <h1>欢迎来到TAOTAO应用库!</h1>
         <p>当前位置: {location}</p>
         <p>天气信息: {weather_info}</p>
         <p>这是一个可部署的Flask应用示例。</p>
