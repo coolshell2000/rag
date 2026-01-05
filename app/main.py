@@ -79,8 +79,6 @@ def get_visitors(limit=100):
 
 def get_ip_location(ip_address):
     """Get location information for an IP address."""
-    # For now, we'll use a simple mock implementation
-    # In a production environment, you would use a service like GeoIP2
     import requests
     import socket
 
@@ -98,13 +96,45 @@ def get_ip_location(ip_address):
             country = data.get('country', 'N/A')
             city = data.get('city', 'N/A')
             region = data.get('regionName', 'N/A')
+            lat = data.get('lat', None)
+            lon = data.get('lon', None)
             location = f"{city}, {region}, {country}"
-        else:
-            location = "Location unavailable"
-    except:
-        location = "Location unavailable"
 
-    return location, reverse_dns
+            # Return both location and coordinates for weather API
+            return location, reverse_dns, lat, lon
+        else:
+            return "Location unavailable", reverse_dns, None, None
+    except:
+        return "Location unavailable", reverse_dns, None, None
+
+def get_weather_info(lat, lon):
+    """Get weather information for given coordinates using OpenWeatherMap API."""
+    import requests
+    import os
+
+    # Get API key from environment variables
+    api_key = os.getenv('OPENWEATHER_API_KEY')
+
+    if not api_key or not lat or not lon:
+        return "Weather unavailable"
+
+    try:
+        # Call OpenWeatherMap API
+        url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
+        response = requests.get(url, timeout=3)
+
+        if response.status_code == 200:
+            data = response.json()
+            temperature = round(data['main']['temp'])
+            description = data['weather'][0]['description']
+            humidity = data['main']['humidity']
+            weather_info = f"{temperature}°C, {description}, Humidity: {humidity}%"
+            return weather_info
+        else:
+            return "Weather unavailable"
+    except Exception as e:
+        print(f"Weather API error: {e}")
+        return "Weather unavailable"
 
 # Initialize database on startup
 init_db()
@@ -480,6 +510,7 @@ def visitor_history():
                 <th>用户名</th>
                 <th>位置</th>
                 <th>反向DNS</th>
+                <th>天气</th>
                 <th>时间戳</th>
                 <th>用户代理</th>
             </tr>
@@ -492,8 +523,13 @@ def visitor_history():
         user_agent_display = user_agent if user_agent else "N/A"
         username_display = username if username else "访客"
 
-        # Get location and reverse DNS info
-        location, reverse_dns = get_ip_location(ip)
+        # Get location, reverse DNS, and coordinates
+        location, reverse_dns, lat, lon = get_ip_location(ip)
+
+        # Get weather info if coordinates are available
+        weather_info = "Weather unavailable"
+        if lat and lon:
+            weather_info = get_weather_info(lat, lon)
 
         html += f'''
             <tr>
@@ -501,6 +537,7 @@ def visitor_history():
                 <td>{username_display}</td>
                 <td>{location}</td>
                 <td>{reverse_dns}</td>
+                <td>{weather_info}</td>
                 <td>{timestamp}</td>
                 <td>{user_agent_display}</td>
             </tr>
