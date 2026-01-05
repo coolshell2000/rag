@@ -99,8 +99,17 @@ https://github.com/coolshell2000/github-actions-test
    - `GOOGLE_CLIENT_SECRET`
    - `WECHAT_CLIENT_ID`（可选）
    - `WECHAT_CLIENT_SECRET`（可选）
+   - `OPENWEATHER_API_KEY`（可选，用于天气功能）
 
 注意：不要将包含敏感信息的 `.env` 文件推送到GitHub仓库，因为这会导致安全问题。Render会在部署过程中使用您在控制台配置的环境变量。
+
+### 天气API配置
+
+要启用天气功能，您需要：
+
+1. 注册OpenWeatherMap API密钥（免费版可用）
+2. 在环境变量中设置 `OPENWEATHER_API_KEY`
+3. 天气信息将根据访客IP地址的地理位置自动显示
 
 ### 启动应用
 
