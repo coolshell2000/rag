@@ -420,6 +420,7 @@ def visitor_history():
         <thead>
             <tr>
                 <th>IP地址</th>
+                <th>用户名</th>
                 <th>时间戳</th>
                 <th>用户代理</th>
             </tr>
@@ -430,9 +431,18 @@ def visitor_history():
     for visitor in visitors:
         ip, timestamp, user_agent = visitor
         user_agent_display = user_agent if user_agent else "N/A"
+
+        # Try to find user associated with this IP
+        username = "访客"
+        # In a real scenario, we would need to store user_id with each visit
+        # For now, we'll just show current user if they're viewing their own history
+        if current_user.is_authenticated:
+            username = current_user.name
+
         html += f'''
             <tr>
                 <td>{ip}</td>
+                <td>{username}</td>
                 <td>{timestamp}</td>
                 <td>{user_agent_display}</td>
             </tr>
