@@ -378,14 +378,25 @@ def profile():
     """Show user profile."""
     html = f'''
     <h1>用户资料</h1>
-    <div>
-        <p><strong>姓名:</strong> {current_user.name}</p>
-        <p><strong>邮箱:</strong> {current_user.email}</p>
-        <p><strong>提供商:</strong> {current_user.provider}</p>
-        <p><strong>头像:</strong> <img src="{current_user.profile_pic}" style="width: 100px; height: 100px; border-radius: 50%;"></p>
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <img src="{current_user.profile_pic or 'https://via.placeholder.com/100'}"
+                 style="width: 100px; height: 100px; border-radius: 50%; margin-right: 20px;"
+                 onerror="this.src='https://via.placeholder.com/100'; this.onerror=null;">
+            <div>
+                <h2>{current_user.name or '未知用户'}</h2>
+                <p><strong>登录提供商:</strong> {current_user.provider or 'local'}</p>
+            </div>
+        </div>
+        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+            <p><strong>邮箱:</strong> {current_user.email or '未提供'}</p>
+            <p><strong>用户ID:</strong> {current_user.id}</p>
+            <p><strong>提供商用户ID:</strong> {current_user.provider_user_id or 'N/A'}</p>
+        </div>
+        <br>
+        <a href="/" style="display: inline-block; padding: 10px 20px; background-color: #4285f4; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px;">返回主页</a>
+        <a href="/logout" style="display: inline-block; padding: 10px 20px; background-color: #ea4335; color: white; text-decoration: none; border-radius: 4px;">退出登录</a>
     </div>
-    <br>
-    <a href="/">返回主页</a> | <a href="/logout">退出登录</a>
     '''
     return html
 
