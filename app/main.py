@@ -157,6 +157,7 @@ def home():
     return '''
     <h1>欢迎来到TAOTAO应用!</h1>
     <p>这是一个可部署的Flask应用示例。</p>
+    <a href="/login">登录</a> |
     <a href="/api/status">查看API状态</a> |
     <a href="/health">健康检查</a> |
     <a href="/visitors">访问者历史</a>
