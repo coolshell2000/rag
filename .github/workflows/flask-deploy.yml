@@ -32,40 +32,32 @@ jobs:
         # exit-zero treats all errors as warnings
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         
-    - name: Run Flask app tests
+    - name: Run unit tests
       run: |
-        python -c "
-import sys
-sys.path.insert(0, './app')
-from main import app
-print('Testing Flask app import...' )
-assert app is not None
-print('Flask app imported successfully!')
-"
+        python -m pytest tests/ -v
         
     - name: Run Flask app in background and test
       run: |
         # Start the Flask app in the background
-        cd app && python -c "
-from main import app
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
-" &
+        timeout 30 python -m flask --app app.main run --host=0.0.0.0 --port=5000 &
         APP_PID=$!
-        
-        # Wait a moment for the app to start
-        sleep 5
-        
+
+        # Wait for the app to start
+        sleep 10
+
         # Test the endpoints
         echo Testing home page...
         curl -f http://localhost:5000/ || echo "Home page test completed"
-        
+
         echo Testing API status...
         curl -f http://localhost:5000/api/status || echo "API status test completed"
-        
+
         echo Testing health check...
         curl -f http://localhost:5000/health || echo "Health check test completed"
-        
+
+        echo Testing readiness check...
+        curl -f http://localhost:5000/ready || echo "Readiness check test completed"
+
         # Kill the background process
         kill $APP_PID || true
 
