@@ -42,8 +42,8 @@ def save_visitor(ip_address, user_agent=None):
     user_id = None
     try:
         # Check if we're in a request context and current_user is available
-        from flask import _request_ctx_stack
-        if _request_ctx_stack.top is not None:
+        from flask import has_request_context
+        if has_request_context():
             from flask_login import current_user
             if current_user and current_user.is_authenticated:
                 user_id = current_user.id
