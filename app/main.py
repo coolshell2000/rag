@@ -73,7 +73,7 @@ login_manager.login_view = 'login'
 # Initialize OAuth
 oauth = OAuth(app)
 
-from auth import User, init_users_table, get_user, create_user, get_user_by_provider
+from auth import User, init_users_table, get_user, create_user, get_user_by_provider, get_user_by_email
 from config import SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_DISCOVERY_URL, WECHAT_CLIENT_ID, WECHAT_CLIENT_SECRET, WECHAT_AUTHORIZE_URL, WECHAT_TOKEN_URL, WECHAT_USER_INFO_URL
 
 # Set secret key
