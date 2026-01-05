@@ -603,6 +603,46 @@ def rag_index():
         <a href="/">返回主页</a>
         '''
 
+# Import RAG app routes if available
+try:
+    from rag_app.app import app as rag_app_instance
+
+    # Mount the RAG app at /rag path
+    app.register_blueprint(rag_app_instance, url_prefix='/rag')
+    print("✅ RAG app routes registered successfully")
+except ImportError as e:
+    print(f"⚠️ RAG app not available: {e}")
+
+    # Define placeholder routes for RAG functionality
+    @app.route('/rag/jobs')
+    def rag_jobs():
+        return '''
+        <h1>RAG职位列表</h1>
+        <p>此功能正在开发中...</p>
+        <a href="/rag">返回RAG首页</a> |
+        <a href="/">返回主页</a>
+        '''
+
+    @app.route('/rag/map')
+    def rag_map():
+        return '''
+        <h1>RAG地图视图</h1>
+        <p>此功能正在开发中...</p>
+        <a href="/rag">返回RAG首页</a> |
+        <a href="/">返回主页</a>
+        '''
+
+    @app.route('/rag/search')
+    def rag_search():
+        return '''
+        <h1>RAG职位搜索</h1>
+        <p>此功能正在开发中...</p>
+        <a href="/rag">返回RAG首页</a> |
+        <a href="/">返回主页</a>
+        '''
+
+    print("⚠️ Placeholder routes created for RAG app")
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     logger.info(f"Starting Flask app on port {port}")
