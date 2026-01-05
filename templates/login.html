@@ -15,7 +15,7 @@
             align-items: center;
             height: 100vh;
         }
-        
+
         .login-container {
             background-color: white;
             padding: 40px;
@@ -24,12 +24,12 @@
             text-align: center;
             width: 350px;
         }
-        
+
         .login-title {
             margin-bottom: 30px;
             color: #333;
         }
-        
+
         .login-btn {
             display: block;
             width: 100%;
@@ -43,30 +43,52 @@
             text-decoration: none;
             text-align: center;
         }
-        
+
         .google-btn {
             background-color: #4285f4;
         }
-        
+
         .wechat-btn {
             background-color: #07c160;
         }
-        
+
+        .disabled-btn {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         .back-home {
             margin-top: 20px;
             display: block;
             color: #666;
             text-decoration: none;
         }
+
+        .provider-note {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1 class="login-title">登录到 TAOTAO应用</h1>
-        
-        <a href="/login/google" class="login-btn google-btn">使用 Google 登录</a>
-        <a href="/login/wechat" class="login-btn wechat-btn">使用 微信 登录</a>
-        
+
+        {% if providers.google %}
+            <a href="/login/google" class="login-btn google-btn">使用 Google 登录</a>
+        {% else %}
+            <div class="login-btn disabled-btn">Google 登录不可用</div>
+            <div class="provider-note">请配置 GOOGLE_CLIENT_ID 和 GOOGLE_CLIENT_SECRET</div>
+        {% endif %}
+
+        {% if providers.wechat %}
+            <a href="/login/wechat" class="login-btn wechat-btn">使用 微信 登录</a>
+        {% else %}
+            <div class="login-btn disabled-btn">微信登录不可用</div>
+            <div class="provider-note">请配置 WECHAT_CLIENT_ID 和 WECHAT_CLIENT_SECRET</div>
+        {% endif %}
+
         <a href="/" class="back-home">返回主页</a>
     </div>
 </body>

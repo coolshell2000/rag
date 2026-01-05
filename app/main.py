@@ -90,6 +90,9 @@ if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
             "scope": "openid email profile"
         },
     )
+    print("Google OAuth configured")
+else:
+    print("Google OAuth not configured - missing environment variables")
 
 # WeChat OAuth registration
 if WECHAT_CLIENT_ID and WECHAT_CLIENT_SECRET:
@@ -104,6 +107,9 @@ if WECHAT_CLIENT_ID and WECHAT_CLIENT_SECRET:
             "scope": "snsapi_login"  # WeChat scope for login
         },
     )
+    print("WeChat OAuth configured")
+else:
+    print("WeChat OAuth not configured - missing environment variables")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -204,7 +210,12 @@ def readiness_check():
 @app.route('/login')
 def login():
     """Show login options."""
-    return render_template('login.html')
+    # Pass available login providers to the template
+    available_providers = {
+        'google': bool(GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET),
+        'wechat': bool(WECHAT_CLIENT_ID and WECHAT_CLIENT_SECRET)
+    }
+    return render_template('login.html', providers=available_providers)
 
 @app.route('/login/google')
 def login_google():

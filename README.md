@@ -88,6 +88,20 @@ https://github.com/coolshell2000/github-actions-test
 
 2. 本项目已预配置了Google OAuth密钥，可直接使用
 
+### 在Render上部署时配置环境变量
+
+当在Render上部署此应用时，您需要：
+
+1. 在Render控制台的服务设置中，转到"Environment"标签页
+2. 添加以下环境变量：
+   - `SECRET_KEY`
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `WECHAT_CLIENT_ID`（可选）
+   - `WECHAT_CLIENT_SECRET`（可选）
+
+注意：不要将包含敏感信息的 `.env` 文件推送到GitHub仓库，因为这会导致安全问题。Render会在部署过程中使用您在控制台配置的环境变量。
+
 ### 启动应用
 
 使用以下命令启动应用：
