@@ -561,10 +561,47 @@ def visitor_history():
         </tbody>
     </table>
     <br>
-    <a href="/">返回主页</a>
+    <a href="/">返回主页</a> |
+    <a href="/rag">RAG应用</a>
     '''
 
     return html
+
+@app.route('/rag')
+def rag_index():
+    """Route to the RAG application."""
+    # Get the real IP address (considering proxies)
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip_address and ',' in ip_address:
+        ip_address = ip_address.split(',')[0].strip()
+
+    user_agent = request.headers.get('User-Agent')
+    logger.info(f"RAG app accessed by IP: {ip_address}")
+    save_visitor(ip_address, user_agent)
+
+    # Check if user is authenticated
+    if current_user.is_authenticated:
+        return f'''
+        <h1>欢迎使用RAG求职应用!</h1>
+        <p>你好, {current_user.name}!</p>
+        <p>这是一个基于RAG系统的求职搜索应用。</p>
+        <a href="/rag/jobs">查看职位</a> |
+        <a href="/rag/map">地图视图</a> |
+        <a href="/rag/search">搜索职位</a> |
+        <a href="/profile">个人资料</a> |
+        <a href="/logout">退出登录</a> |
+        <a href="/">返回主页</a>
+        '''
+    else:
+        return '''
+        <h1>欢迎使用RAG求职应用!</h1>
+        <p>这是一个基于RAG系统的求职搜索应用。</p>
+        <a href="/rag/jobs">查看职位</a> |
+        <a href="/rag/map">地图视图</a> |
+        <a href="/rag/search">搜索职位</a> |
+        <a href="/login">登录</a> |
+        <a href="/">返回主页</a>
+        '''
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
